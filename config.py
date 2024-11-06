@@ -4,10 +4,10 @@ from os import getenv
 from pathlib import Path
 
 TOKEN = getenv('TOKEN')
-if not TOKEN:
-        raise ValueError("Missing TOKEN environment variable.")
 WEBHOOK_URL = getenv('WEBHOOK_URL')
-if not WEBHOOK_URL.startswith('http'):
+if not TOKEN and not WEBHOOK_URL:
+        raise ValueError("You must provide one of TOKEN or WEBHOOK_URL.")
+if WEBHOOK_URL and not WEBHOOK_URL.startswith('http'):
         raise ValueError("Invalid format for WEBHOOK_URL. Expected 'http' followed by a valid URL.")
 
 CHANNEL_ID = int(getenv('CHANNEL_ID'))
