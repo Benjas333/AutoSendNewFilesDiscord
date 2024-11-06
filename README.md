@@ -4,7 +4,7 @@ Do you want to automatically send new files from a directory of your computer to
 *Now Selfbot is available too.*
 
 ## Official Releases
-You can download the last official release [here](https://github.com/Benjas333/AutoSendNewFilesWebhook/releases/tag/v1.0.0).
+You can download the last official release [here](https://github.com/Benjas333/AutoSendNewFilesWebhook/releases/tag/v1.1.1).
 
 *Disclaimer: I don't know if it works properly in other operating systems than Windows.*
 
@@ -27,7 +27,7 @@ pip install -r requirements.txt
 - Change the content of `example.env`.
 - Rename it to `.env`.
 ## Usage
-### Command line
+### Command line method
 **`.env` file required.**
 #### Webhook
 ```
@@ -40,7 +40,7 @@ python selfbot.py
 To use the selfbot you must provide your account token in the `.env` file.
 
 `Ctrl + C` to stop the scripts.
-### Import
+### Import method
 #### Webhook
 ```python
 # Import script
