@@ -1,10 +1,13 @@
 # Auto Send New Files Webhook
 Do you want to automatically send new files from a directory of your computer to a Discord Webhook? Well now you can with this code. Don't worry anymore about taking the time to search the file and sending it manually. This code will automatically do it for you.
 
+![](assets/discordExample.png)
+
 *Now Selfbot is available too.*
 
 ## Official Releases
 You can download the last official release [here](https://github.com/Benjas333/AutoSendNewFilesWebhook/releases/tag/v1.1.1).
+![](assets/terminalExample.png)
 
 *Disclaimer: I don't know if it works properly in other operating systems than Windows.*
 
