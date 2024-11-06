@@ -1,12 +1,9 @@
-import config
+import files_handler
 from typing import Optional
 from pathlib import Path
 from time import sleep
-from files_handler import globClips, isFileBeingUsed
 # from clips_manipulator import create_clip
 from discord_webhook import DiscordWebhook
-
-webhook = DiscordWebhook(config.WEBHOOK_URL, username="New Clips AutoSender")
 
 
 def sendMessage(message: str, file: Optional[Path] = None):
@@ -31,8 +28,12 @@ def sendMessage(message: str, file: Optional[Path] = None):
         webhook.remove_files()
 
 
-def checkForNewFiles():
-        new_clips = globClips(config.CLIPS_DIRECTORY)
+def checkForNewFiles(
+        directory: str,
+        extension: str,
+        recursive: bool
+):
+        new_clips = files_handler.globNewFiles(directory, extension, recursive)
         if not new_clips: return
 
         sendMessage("### New file(s) detected")
@@ -40,17 +41,21 @@ def checkForNewFiles():
         for clip in new_clips:
                 clipObj = Path(clip)
                 file_size = -1
-                while isFileBeingUsed(clipObj, file_size):
+                while files_handler.isFileBeingUsed(clipObj, file_size):
                         print(f"Waiting for file to stop being used... {clip}")
                         file_size = clipObj.stat().st_size
                         sleep(0.5)
                 sendMessage(f"New file: {clipObj.name}", clipObj)
-        config.updateFile(new_clips, doAppend=True)
+        files_handler.updateFile(new_clips, doAppend=True)
+
+webhook = DiscordWebhook("", username="New Clips AutoSender")
 
 
 if __name__ == "__main__":
+        import config
+        webhook.url = config.WEBHOOK_URL
         sendMessage("Successfully started webhook")
 
         while True:
                 sleep(1)
-                checkForNewFiles()
+                checkForNewFiles(config.CLIPS_DIRECTORY, config.CLIPS_EXTENSION, config.recursive_directories)

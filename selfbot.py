@@ -1,29 +1,39 @@
-import config
-# from typing import Optional
+import files_handler
 from pathlib import Path
 from time import sleep
-from files_handler import globClips, isFileBeingUsed
 # from clips_manipulator import create_clip
 from discord.ext import tasks
 import discord
 
 
 class SelfBot(discord.Client):
-        def __init__(self, *args, **kwargs):
+        def __init__(
+                self,
+                channel_id: int,
+                directory: str,
+                extension = "*",
+                recursive = False,
+                *args,
+                **kwargs
+        ):
                 super().__init__(*args, **kwargs)
+                self.channel_id = channel_id
+                self.directory = directory
+                self.extension = extension
+                self.recursive = recursive
         
         async def setup_hook(self) -> None:
                 self.sendNewClips.start()
 
         async def on_ready(self):
-                print(f"Logged in as {self.user}")
-                channel = self.get_channel(config.CHANNEL_ID)
-                await channel.send("Successfully started sending new clips")
+                print(f"\033[92m===== Logged in as {self.user} =====\033[0m")
+                channel = self.get_channel(self.channel_id)
+                await channel.send("Successfully started sending new files")
         
         @tasks.loop(seconds=1)
         async def sendNewClips(self):
-                channel = self.get_channel(config.CHANNEL_ID)
-                new_clips = globClips(config.CLIPS_DIRECTORY)
+                channel = self.get_channel(self.channel_id)
+                new_clips = files_handler.globNewFiles(self.directory, self.extension, self.recursive)
                 if not new_clips: return
 
                 message = "### New file(s) detected"
@@ -33,7 +43,7 @@ class SelfBot(discord.Client):
                 for clip in new_clips:
                         clipObj = Path(clip)
                         file_size = -1
-                        while isFileBeingUsed(clipObj, file_size):
+                        while files_handler.isFileBeingUsed(clipObj, file_size):
                                 print(f"Waiting for file to stop being used... {clip}")
                                 file_size = clipObj.stat().st_size
                                 sleep(0.5)
@@ -50,12 +60,18 @@ class SelfBot(discord.Client):
                         print(message)
                         with file.open('rb') as content:
                                 await channel.send(message, file=discord.File(content, file.name))
-                config.updateFile(new_clips, doAppend=True)
+                files_handler.updateFile(new_clips, doAppend=True)
         
         @sendNewClips.before_loop
         async def before_sendNewClips(self):
                 await self.wait_until_ready()
 
-client = SelfBot()
-client.run(config.TOKEN)
-
+if __name__ == "__main__":
+        import config
+        client = SelfBot(
+                channel_id=config.CHANNEL_ID,
+                directory=config.CLIPS_DIRECTORY,
+                extension=config.CLIPS_EXTENSION,
+                recursive=config.recursive_directories
+        )
+        client.run(config.TOKEN)
