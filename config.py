@@ -29,23 +29,3 @@ str_to_bool = {
 
 recursive_directories = getenv('RECURSIVE_DIRECTORIES', "true").strip().lower()
 recursive_directories = str_to_bool["true" if not recursive_directories in ["true", "false"] else recursive_directories]
-
-files_backup = "old_clips.txt"
-
-
-def loadListFromFile():
-        with open(files_backup, 'r', encoding="utf-8") as f:
-                return [line.strip() for line in f]
-
-
-def updateFile(new_list: list[str], doAppend: bool):
-        global files
-        with open(files_backup, 'w' if not doAppend else 'a', encoding="utf-8") as f:
-                new_list_str = "\n".join(new_list)
-                f.write(new_list_str if not doAppend or not files else "\n" + new_list_str)
-        if doAppend:
-                files.extend(new_list)
-        else:
-                files = new_list
-
-files = loadListFromFile()
