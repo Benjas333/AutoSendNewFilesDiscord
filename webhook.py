@@ -45,7 +45,7 @@ def checkForNewFiles():
                         file_size = clipObj.stat().st_size
                         sleep(0.5)
                 sendMessage(f"New file: {clipObj.name}", clipObj)
-        config.updateFile(new_clips, 'a')
+        config.updateFile(new_clips, doAppend=True)
 
 
 if __name__ == "__main__":

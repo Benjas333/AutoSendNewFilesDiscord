@@ -15,4 +15,5 @@ def isFileBeingUsed(file: Path, last_size: int) -> bool:
 
 if __name__ == "__main__":
         clips_list = globClips(config.CLIPS_DIRECTORY)
+        config.updateFile(clips_list, doAppend=True)
         print(clips_list)

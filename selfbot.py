@@ -50,7 +50,7 @@ class SelfBot(discord.Client):
                         print(message)
                         with file.open('rb') as content:
                                 await channel.send(message, file=discord.File(content, file.name))
-                config.updateFile(new_clips, 'a')
+                config.updateFile(new_clips, doAppend=True)
         
         @sendNewClips.before_loop
         async def before_sendNewClips(self):
