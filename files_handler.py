@@ -4,6 +4,9 @@ files_backup = "old_clips.txt"
 
 
 def loadListFromFile():
+        if not Path(files_backup).exists():
+                with open(files_backup, 'x'): pass
+        
         with open(files_backup, 'r', encoding="utf-8") as f:
                 return [line.strip() for line in f]
 
