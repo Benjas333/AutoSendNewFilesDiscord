@@ -47,19 +47,16 @@ To use the selfbot you must provide your account token in the `.env` file.
 #### Webhook
 ```python
 # Import script
-import webhook
-from time import sleep
+from webhook import Webhook
 
-webhook.webhook.url = "https://your.discord.webhook/url" # Set webhook url
-webhook.sendMessage("Hello, world!") # You can send simple messages
-while True:
-        sleep(1)
-        webhook.checkForNewFiles(
-                directory="C:\Your\Directory\",
-                extension="*", # '*' will check all files in the directory
-                recursive=True,
-        )
-        # This will check for new files every 1 second
+webhook = Webhook(
+        url="https://your.discord.webhook/url" # Set webhook url
+        directory="C:\Your\Directory"
+        extension="*", # '*' will check all files in the directory
+        recursive=True,
+)
+webhook.sendMessage("Hello, world!") # You can send simple messages!
+webhook.loop()
 ```
 I have realized webhook importing method is trash. I will redo this probably making it a class.
 #### Selfbot
@@ -81,6 +78,7 @@ Way better than the webhook importing method lol (for now).
 - Find an optimized way to send big files quickly.
 
 ## Changelog
+- Added Webhook class in `webhook.py`
 - Added create `old_clips.txt` functionality if the file does not exist. 
 - Added [releases](https://github.com/Benjas333/AutoSendNewFilesWebhook/releases) for people not so familiar with programming in general.
 
