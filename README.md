@@ -78,6 +78,7 @@ Way better than the webhook importing method lol (for now).
 - Find an optimized way to send big files quickly.
 
 ## Changelog
+- Added create `old_clips.txt` functionality if the file does not exist. 
 - Added [releases](https://github.com/Benjas333/AutoSendNewFilesWebhook/releases) for people not so familiar with programming in general.
 
 ## Contributing
