@@ -5,6 +5,7 @@ from time import sleep
 from discord.ext import tasks
 import discord
 
+_seconds = 1.0
 
 class SelfBot(discord.Client):
         def __init__(
@@ -13,6 +14,7 @@ class SelfBot(discord.Client):
                 directory: str,
                 extension = "*",
                 recursive = False,
+                seconds: float = _seconds,
                 *args,
                 **kwargs
         ):
@@ -21,16 +23,22 @@ class SelfBot(discord.Client):
                 self.directory = directory
                 self.extension = extension
                 self.recursive = recursive
+                self.seconds = seconds
+                global _seconds
+                _seconds = self.seconds
         
+
         async def setup_hook(self) -> None:
                 self.sendNewClips.start()
+        
 
         async def on_ready(self):
                 print(f"\033[92m===== Logged in as {self.user} =====\033[0m")
                 channel = self.get_channel(self.channel_id)
                 await channel.send("Successfully started sending new files")
         
-        @tasks.loop(seconds=1)
+
+        @tasks.loop(seconds=_seconds)
         async def sendNewClips(self):
                 channel = self.get_channel(self.channel_id)
                 new_clips = files_handler.globNewFiles(self.directory, self.extension, self.recursive)
@@ -62,9 +70,11 @@ class SelfBot(discord.Client):
                                 await channel.send(message, file=discord.File(content, file.name))
                 files_handler.updateFile(new_clips, doAppend=True)
         
+
         @sendNewClips.before_loop
         async def before_sendNewClips(self):
                 await self.wait_until_ready()
+
 
 if __name__ == "__main__":
         import config

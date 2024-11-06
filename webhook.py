@@ -12,12 +12,14 @@ class Webhook(DiscordWebhook):
                 directory: str,
                 extension = "*",
                 recursive = False,
+                seconds: float = 1.0,
                 **kwargs
         ) -> None:
                 super().__init__(url, username="New Files AutoSender", **kwargs)
                 self.directory = directory
                 self.extension = extension
                 self.recursive = recursive
+                self.seconds = seconds
         
 
         def sendMessage(
@@ -67,10 +69,11 @@ class Webhook(DiscordWebhook):
                         self.sendMessage(f"New file: {clipObj.name}", clipObj)
                 files_handler.updateFile(new_clips, doAppend=True)
         
+
         def loop(self):
                 self.sendMessage("Successfully started webhook")
                 while True:
-                        sleep(1)
+                        sleep(self.seconds)
                         self.checkForNewFiles(self.directory, self.extension, self.recursive)
 
 
