@@ -1,0 +1,5 @@
+/.env
+/.venv
+/clips
+/todo.txt
+/__pycache__
