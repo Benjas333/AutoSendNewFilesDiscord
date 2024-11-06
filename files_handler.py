@@ -39,6 +39,6 @@ def isFileBeingUsed(file: Path, last_size: int) -> bool:
 
 if __name__ == "__main__":
         import config
-        clips_list = globNewFiles(config.CLIPS_DIRECTORY, config.CLIPS_EXTENSION, config.recursive_directories)
+        clips_list = globNewFiles(config.CLIPS_DIRECTORY, config.CLIPS_EXTENSION, config.RECURSIVE_DIRECTORIES)
         updateFile(clips_list, doAppend=True)
         print(clips_list)

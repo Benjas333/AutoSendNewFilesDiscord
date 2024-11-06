@@ -83,6 +83,6 @@ if __name__ == "__main__":
                 url=config.WEBHOOK_URL,
                 directory=config.CLIPS_DIRECTORY,
                 extension=config.CLIPS_EXTENSION,
-                recursive=config.recursive_directories
+                recursive=config.RECURSIVE_DIRECTORIES
         )
         webhook.loop()

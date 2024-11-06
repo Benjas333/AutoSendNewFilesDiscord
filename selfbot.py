@@ -82,6 +82,6 @@ if __name__ == "__main__":
                 channel_id=config.CHANNEL_ID,
                 directory=config.CLIPS_DIRECTORY,
                 extension=config.CLIPS_EXTENSION,
-                recursive=config.recursive_directories
+                recursive=config.RECURSIVE_DIRECTORIES
         )
         client.run(config.TOKEN)
