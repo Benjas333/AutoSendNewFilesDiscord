@@ -10,7 +10,10 @@ if not TOKEN and not WEBHOOK_URL:
 if WEBHOOK_URL and not WEBHOOK_URL.startswith('http'):
         raise ValueError("Invalid format for WEBHOOK_URL. Expected 'http' followed by a valid URL.")
 
-CHANNEL_ID = int(getenv('CHANNEL_ID'))
+channel_id_str = getenv('CHANNEL_ID')
+if len(channel_id_str) > 0 and not channel_id_str.isdecimal():
+        raise ValueError("Invalid format for CHANNEL_ID. Expected a decimal number.")
+CHANNEL_ID = int(channel_id_str)
 
 CLIPS_DIRECTORY = getenv('CLIPS_DIRECTORY')
 if not CLIPS_DIRECTORY:
@@ -27,5 +30,9 @@ str_to_bool = {
         "false": False
 }
 
-recursive_directories = getenv('RECURSIVE_DIRECTORIES', "true").strip().lower()
-recursive_directories = str_to_bool["true" if not recursive_directories in ["true", "false"] else recursive_directories]
+recursive_directories_str = getenv('RECURSIVE_DIRECTORIES', "true").strip().lower()
+RECURSIVE_DIRECTORIES = str_to_bool.get(recursive_directories_str, True)
+
+seconds_str = getenv('SECONDS', 1.0)
+if isinstance(seconds_str, str) and len(seconds_str) > 0 and not seconds_str.isdecimal():
+        raise ValueError("Invalid format for SECONDS. Expected a decimal number.")
