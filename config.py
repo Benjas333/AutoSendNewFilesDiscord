@@ -38,14 +38,14 @@ def loadListFromFile():
                 return [line.strip() for line in f]
 
 
-def updateFile(new_list: list[str], mode: str = 'w'):
+def updateFile(new_list: list[str], doAppend: bool):
         global files
-        if mode == 'w':
-                files = new_list
-        elif mode == 'a':
-                files.extend(new_list)
-        with open(files_backup, mode, encoding="utf-8") as f:
+        with open(files_backup, 'w' if not doAppend else 'a', encoding="utf-8") as f:
                 new_list_str = "\n".join(new_list)
-                f.write(new_list_str if mode != 'a' else "\n" + new_list_str)
+                f.write(new_list_str if not doAppend or not files else "\n" + new_list_str)
+        if doAppend:
+                files.extend(new_list)
+        else:
+                files = new_list
 
 files = loadListFromFile()
