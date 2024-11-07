@@ -78,6 +78,7 @@ client.run(token="YOUR TOKEN HERE")
 - Find an optimized way to send big files quickly.
 
 ## Changelog
+- Added loop() method to Selfbot class and token as an init argument.
 - Added multiple extensions implementation
 - Added multiple Discord channels implementation
 - Added seconds argument (default: 1)
