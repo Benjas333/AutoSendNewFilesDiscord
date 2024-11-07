@@ -61,16 +61,18 @@ class SelfBot(discord.Client):
                                 continue
                         self.channels.append(channel)
                         await channel.send("Successfully started sending new files")
+                if len(self.channels) == 0:
+                        raise Exception("No channels were started")
         
 
         @tasks.loop(seconds=_seconds)
         async def sendNewFiles(self):
                 new_files = files_handler.globNewFiles(self.directory, self.extension, self.recursive)
                 if not new_files: return
-
                 await self.sendMessage("### New file(s) detected")
 
                 for file in new_files:
+                        print(file)
                         fileObj = Path(file)
                         file_size = -1
                         while files_handler.isFileBeingUsed(fileObj, file_size):
@@ -99,7 +101,7 @@ if __name__ == "__main__":
         client = SelfBot(
                 channel_id=[config.CHANNEL_ID],
                 directory=config.FILES_DIRECTORY,
-                extension=config.FILES_EXTENSION,
+                extension=[config.FILES_EXTENSION, 'm4a'],
                 recursive=config.RECURSIVE_DIRECTORIES,
         )
         client.run(config.TOKEN)
