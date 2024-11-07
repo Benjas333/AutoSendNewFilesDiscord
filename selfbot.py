@@ -1,4 +1,4 @@
-import files_handler
+import src.files_handler as files_handler
 from pathlib import Path
 from time import sleep
 from typing import Optional
@@ -95,7 +95,7 @@ class SelfBot(discord.Client):
 
 
 if __name__ == "__main__":
-        import config
+        import src.config as config
         client = SelfBot(
                 channel_id=[config.CHANNEL_ID, 1119884285156012076, 1303871037225832448],
                 directory=config.FILES_DIRECTORY,

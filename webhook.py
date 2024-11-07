@@ -1,4 +1,4 @@
-import files_handler
+import src.files_handler as files_handler
 from typing import Optional
 from pathlib import Path
 from time import sleep
