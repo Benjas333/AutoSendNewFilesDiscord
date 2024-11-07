@@ -270,3 +270,4 @@ app.py
 executable/__pycache__/util.cpython-312.pyc
 src/__pycache__/config.cpython-312.pyc
 src/__pycache__/files_handler.cpython-312.pyc
+test.py
