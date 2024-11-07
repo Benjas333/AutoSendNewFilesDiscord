@@ -81,7 +81,7 @@ class Webhook():
 
 
 if __name__ == "__main__":
-        import config
+        import src.config as config
         webhook = Webhook(
                 url=[config.WEBHOOK_URL, "https://discord.com/api/webhooks/1274975754324541463/zVOzPaCyswyYix1K8k1DU7thmedrT6wclki5GBe4y6A7BTMji1gZqrH1-Ao9VKslrlPi"],
                 directory=config.FILES_DIRECTORY,
