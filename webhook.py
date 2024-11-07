@@ -9,6 +9,7 @@ class Webhook():
         def __init__(
                 self,
                 url: str | list[str],
+                user: Optional[str],
                 directory: str,
                 extension: str | list[str] = "*",
                 recursive: bool = False,
@@ -22,6 +23,7 @@ class Webhook():
                 self.recursive = recursive
                 self.seconds = seconds
                 self.webhooks = [DiscordWebhook(webhook_url, username="New Files AutoSender", **kwargs) for webhook_url in self.webhook_urls]
+                self.user = user
         
 
         def sendMessage(
@@ -29,6 +31,8 @@ class Webhook():
                 message: str,
                 file: Optional[Path] = None
         ):
+                userPrefix = f"({self.user})" if self.user else ''
+                message = f"{userPrefix}{message}"
                 print(message)
                 for webhook in self.webhooks:
                         webhook.content = message
