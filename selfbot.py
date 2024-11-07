@@ -13,8 +13,8 @@ class SelfBot(discord.Client):
                 self,
                 channel_id: int | list[int],
                 directory: str,
-                extension = "*",
-                recursive = False,
+                extension: str | list[str] = "*",
+                recursive: bool = False,
                 seconds: float = _seconds,
                 *args,
                 **kwargs
@@ -86,7 +86,7 @@ class SelfBot(discord.Client):
                         # file = Path(f"clips/{clipObj.name}")
 
                         await self.sendMessage(f"New file: `{fileObj.name}`", fileObj)
-                        files_handler.updateFile(file, doAppend=True)
+                        files_handler.updateFile([file], doAppend=True)
         
 
         @sendNewFiles.before_loop

