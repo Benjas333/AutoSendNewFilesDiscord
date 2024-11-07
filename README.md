@@ -50,7 +50,7 @@ To use the selfbot you must provide your account token in the `.env` file.
 from webhook import Webhook
 
 webhook = Webhook(
-        url="https://your.discord.webhook/url", # Set webhook url
+        url=["https://your.discord.webhook/url", "https://another.discord.webhook/url"], # Set webhook url
         directory="C:\Your\Directory",
         extension="*", # '*' will check for all files in the directory
         recursive=True,
@@ -65,9 +65,9 @@ webhook.loop()
 from selfbot import Selfbot
 
 client = Selfbot(
-        channel_id=1234567890, # the channel id where you want to send the files
+        channel_id=[1234567890, 987654321], # the channel id where you want to send the files
         directory="C:\Your\Directory",
-        extension="mp3",
+        extension=["mp3", "m4a"],
         recursive=False,
         seconds=5
 )
@@ -78,6 +78,8 @@ client.run(token="YOUR TOKEN HERE")
 - Find an optimized way to send big files quickly.
 
 ## Changelog
+- Added multiple extensions implementation
+- Added multiple Discord channels implementation
 - Added seconds argument (default: 1)
 - Added Webhook class in `webhook.py`
 - Added create `old_clips.txt` functionality if the file does not exist. 
