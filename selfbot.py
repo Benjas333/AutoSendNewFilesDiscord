@@ -97,7 +97,7 @@ class SelfBot(discord.Client):
 if __name__ == "__main__":
         import src.config as config
         client = SelfBot(
-                channel_id=[config.CHANNEL_ID, 1119884285156012076, 1303871037225832448],
+                channel_id=[config.CHANNEL_ID],
                 directory=config.FILES_DIRECTORY,
                 extension=config.FILES_EXTENSION,
                 recursive=config.RECURSIVE_DIRECTORIES,
