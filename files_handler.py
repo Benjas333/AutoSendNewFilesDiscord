@@ -1,19 +1,19 @@
 from pathlib import Path
 
-files_backup = "old_clips.txt"
+FILES_BACKUP = "old_files.txt"
 
 
 def loadListFromFile():
-        if not Path(files_backup).exists():
-                with open(files_backup, 'x'): pass
+        if not Path(FILES_BACKUP).exists():
+                with open(FILES_BACKUP, 'x'): pass
         
-        with open(files_backup, 'r', encoding="utf-8") as f:
+        with open(FILES_BACKUP, 'r', encoding="utf-8") as f:
                 return [line.strip() for line in f]
 
 
 def updateFile(new_list: list[str], doAppend: bool):
         global files
-        with open(files_backup, 'w' if not doAppend else 'a', encoding="utf-8") as f:
+        with open(FILES_BACKUP, 'w' if not doAppend else 'a', encoding="utf-8") as f:
                 new_list_str = "\n".join(new_list)
                 f.write(new_list_str if not doAppend or not files else "\n" + new_list_str)
         if doAppend:
@@ -39,6 +39,6 @@ def isFileBeingUsed(file: Path, last_size: int) -> bool:
 
 if __name__ == "__main__":
         import config
-        clips_list = globNewFiles(config.CLIPS_DIRECTORY, config.CLIPS_EXTENSION, config.RECURSIVE_DIRECTORIES)
-        updateFile(clips_list, doAppend=True)
-        print(clips_list)
+        files_list = globNewFiles(config.FILES_DIRECTORY, config.FILES_EXTENSION, config.RECURSIVE_DIRECTORIES)
+        updateFile(files_list, doAppend=True)
+        print(files_list)
