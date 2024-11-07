@@ -31,7 +31,7 @@ class Webhook():
                 message: str,
                 file: Optional[Path] = None
         ):
-                userPrefix = f"({self.user})" if self.user else ''
+                userPrefix = f"({self.user}) " if self.user else ''
                 message = f"{userPrefix}{message}"
                 print(message)
                 for webhook in self.webhooks:
@@ -64,7 +64,7 @@ class Webhook():
                 new_files = files_handler.globNewFiles(directory, extension, recursive)
                 if not new_files: return
 
-                self.sendMessage("### New file(s) detected")
+                self.sendMessage("**New file(s) detected**")
 
                 for file in new_files:
                         fileObj = Path(file)
