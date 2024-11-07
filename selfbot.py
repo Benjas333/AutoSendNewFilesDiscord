@@ -12,6 +12,7 @@ class SelfBot(discord.Client):
         def __init__(
                 self,
                 channel_id: int | list[int],
+                token: Optional[str],
                 directory: str,
                 extension: str | list[str] = "*",
                 recursive: bool = False,
@@ -28,6 +29,7 @@ class SelfBot(discord.Client):
                 global _seconds
                 _seconds = self.seconds
                 self.channels = []
+                self.token = token
         
 
         async def sendMessage(
@@ -69,7 +71,7 @@ class SelfBot(discord.Client):
         async def sendNewFiles(self):
                 new_files = files_handler.globNewFiles(self.directory, self.extension, self.recursive)
                 if not new_files: return
-                await self.sendMessage("### New file(s) detected")
+                await self.sendMessage("**New file(s) detected**")
 
                 for file in new_files:
                         print(file)
@@ -94,6 +96,18 @@ class SelfBot(discord.Client):
         @sendNewFiles.before_loop
         async def before_sendNewFiles(self):
                 await self.wait_until_ready()
+        
+
+        def loop(self):
+                if not self.token:
+                        print("No token provided at the object initialization. Use run('TOKEN') instead.")
+                        return
+                try:
+                        self.run(self.token)
+                except KeyboardInterrupt:
+                        print("\nScript stopped.")
+                finally:
+                        self.close()
 
 
 if __name__ == "__main__":
