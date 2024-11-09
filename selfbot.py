@@ -37,7 +37,6 @@ class SelfBot(discord.Client):
                 message: str,
                 file: Optional[Path] = None,
         ):
-                print(message)
                 for channel in self.channels:
                         if not file:
                                 await channel.send(message)
@@ -49,6 +48,8 @@ class SelfBot(discord.Client):
                         print(f"Sending file: {file.name}")
                         with file.open('rb') as content:
                                 await channel.send(message, file=discord.File(content, file.name))
+                        sleep(1)
+                print(message)
 
 
         async def setup_hook(self) -> None:
@@ -63,6 +64,7 @@ class SelfBot(discord.Client):
                                 continue
                         self.channels.append(channel)
                         await channel.send("Successfully started sending new files")
+                        sleep(1)
                 if len(self.channels) == 0:
                         raise Exception("No channels were started")
         
@@ -74,7 +76,6 @@ class SelfBot(discord.Client):
                 await self.sendMessage("**New file(s) detected**")
 
                 for file in new_files:
-                        print(file)
                         fileObj = Path(file)
                         file_size = -1
                         while files_handler.isFileBeingUsed(fileObj, file_size):
