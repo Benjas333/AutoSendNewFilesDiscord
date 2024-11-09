@@ -2,6 +2,7 @@
 Do you want to automatically send new files from a directory of your computer to a Discord Webhook? Well now you can with this code. Don't worry anymore about taking the time to search the file and sending it manually. This code will automatically do it for you.
 
 ![](assets/discordExample.png)
+
 > ![NOTE]
 > Now Selfbot is available too.
 
