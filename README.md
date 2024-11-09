@@ -8,13 +8,12 @@ Do you want to automatically send new files from a directory of your computer to
 ## Official Releases
 You can download the last official release [here](https://github.com/Benjas333/AutoSendNewFilesWebhook/releases/tag/v1.1.1).
 ![](assets/terminalExample.png)
-
-*Disclaimer: I don't know if it works properly in other operating systems than Windows.*
+> [!WARNING]
+> I don't know if it works properly in other operating systems than Windows.
 
 ## Cloning repo
 ### Getting Started
 [Python 3.12](https://www.python.org/downloads/) recommended.
-
 [Discord](https://discord.com/) lol.
 
 ### Clone this project
@@ -22,20 +21,25 @@ You can download the last official release [here](https://github.com/Benjas333/A
 git clone https://github.com/Benjas333/AutoSendNewFilesWebhook
 cd AutoSendNewFilesWebhook
 ```
+
 ### Install dependencies
 ```
 pip install -r requirements.txt
 ```
+
 ### Configure the .env file
 - Change the content of `example.env`.
 - Rename it to `.env`.
+
 ## Usage
 ### Command line method
 **`.env` file required.**
+
 #### Webhook
 ```
 python webhook.py
 ```
+
 #### Selfbot
 ```
 python selfbot.py
@@ -43,6 +47,7 @@ python selfbot.py
 To use the selfbot you must provide your account token in the `.env` file.
 
 `Ctrl + C` to stop the scripts.
+
 ### Import method
 #### Webhook
 ```python
@@ -59,6 +64,7 @@ webhook = Webhook(
 webhook.sendMessage("Hello, world!") # You can send simple messages!
 webhook.loop()
 ```
+
 #### Selfbot
 ```python
 # Import script
@@ -73,7 +79,9 @@ client = Selfbot(
 )
 client.run(token="YOUR TOKEN HERE")
 ```
-#### If you want to use the .env file with the importing methods, you just need to make `import config`.
+> [!WARNING]
+> If you want to use the .env file with the importing methods, you just need to make `import config`.
+
 ## TO DO
 - Find an optimized way to send big files quickly.
 
