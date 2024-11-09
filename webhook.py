@@ -22,7 +22,7 @@ class Webhook():
                 self.extension = extension
                 self.recursive = recursive
                 self.seconds = seconds
-                self.webhooks = [DiscordWebhook(webhook_url, username="New Files AutoSender", **kwargs) for webhook_url in self.webhook_urls]
+                self.webhooks = [DiscordWebhook(webhook_url, rate_limit_retry=True, username="New Files AutoSender", **kwargs) for webhook_url in self.webhook_urls]
                 self.user = user
         
 
