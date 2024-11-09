@@ -33,7 +33,6 @@ class Webhook():
         ):
                 userPrefix = f"({self.user}) " if self.user else ''
                 message = f"{userPrefix}{message}"
-                print(message)
                 for webhook in self.webhooks:
                         webhook.content = message
                         if not file:
@@ -53,6 +52,7 @@ class Webhook():
                         webhook.add_file(file.read_bytes(), file.name)
                         webhook.execute()
                         webhook.remove_files()
+                print(message)
 
 
         def checkForNewFiles(
