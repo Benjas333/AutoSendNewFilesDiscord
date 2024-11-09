@@ -102,12 +102,7 @@ class SelfBot(discord.Client):
                 if not self.token:
                         print("No token provided at the object initialization. Use run('TOKEN') instead.")
                         return
-                try:
-                        self.run(self.token)
-                except KeyboardInterrupt:
-                        print("\nScript stopped.")
-                finally:
-                        self.close()
+                self.run(self.token)
 
 
 if __name__ == "__main__":
