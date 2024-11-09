@@ -80,7 +80,7 @@ client = Selfbot(
 client.run(token="YOUR TOKEN HERE")
 ```
 > [!IMPORTANT]
-> If you want to use the .env file with the importing methods, you just need to make `import config`.
+> If you want to use the `.env` file with the importing methods, you just need to make `import config`.
 
 ## TO DO
 - Find an optimized way to send big files quickly.
@@ -88,12 +88,15 @@ client.run(token="YOUR TOKEN HERE")
 ## Changelog
 - Added rate limit support for the Webhook mode.
 - Added loop() method to Selfbot class and token as an init class argument.
-- Added multiple extensions implementation
-- Added multiple Discord channels implementation
-- Added seconds argument (default: 1)
-- Added Webhook class in `webhook.py`
+- Added multiple extensions implementation for importing methods.
+- Added multiple Discord channels implementation for importing methods.
+- Added seconds argument (default: 1).
+- Added Webhook class in `webhook.py`.
 - Added create `old_clips.txt` functionality if the file does not exist. 
 - Added [releases](https://github.com/Benjas333/AutoSendNewFilesWebhook/releases) for people not so familiar with programming in general.
 
 ## Contributing
 Any contribution would be appreciated.
+
+## Links
+[Twitter](https://twitter.com/ElBenjas333)
