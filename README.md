@@ -6,7 +6,8 @@ Do you want to automatically send new files from a directory of your computer to
 > Now Selfbot is available too.
 
 ## Official Releases
-You can download the last official release [here](https://github.com/Benjas333/AutoSendNewFilesDiscord/releases/tag/v2.1.1).
+You can download the last official release [here](https://github.com/Benjas333/AutoSendNewFilesDiscord/releases/latest/).
+
 ![](assets/terminalExample.png)
 > [!CAUTION]
 > I don't know if it works properly in other operating systems than Windows.
