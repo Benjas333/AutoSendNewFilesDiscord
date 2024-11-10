@@ -1,4 +1,4 @@
-# Auto Send New Files Webhook
+# Auto Send New Files Discord
 Do you want to automatically send new files from a directory of your computer to a Discord Webhook? Well now you can with this code. Don't worry anymore about taking the time to search the file and sending it manually. This code will automatically do it for you.
 
 ![](assets/discordExample.png)
@@ -6,7 +6,7 @@ Do you want to automatically send new files from a directory of your computer to
 > Now Selfbot is available too.
 
 ## Official Releases
-You can download the last official release [here](https://github.com/Benjas333/AutoSendNewFilesWebhook/releases/tag/v1.1.1).
+You can download the last official release [here](https://github.com/Benjas333/AutoSendNewFilesDiscord/releases/tag/v2.1.1).
 ![](assets/terminalExample.png)
 > [!CAUTION]
 > I don't know if it works properly in other operating systems than Windows.
@@ -18,8 +18,8 @@ You can download the last official release [here](https://github.com/Benjas333/A
 
 ### Clone this project
 ```
-git clone https://github.com/Benjas333/AutoSendNewFilesWebhook
-cd AutoSendNewFilesWebhook
+git clone https://github.com/Benjas333/AutoSendNewFilesDiscord
+cd AutoSendNewFilesDiscord
 ```
 
 ### Install dependencies
@@ -93,7 +93,7 @@ client.run(token="YOUR TOKEN HERE")
 - Added seconds argument (default: 1).
 - Added Webhook class in `webhook.py`.
 - Added create `old_clips.txt` functionality if the file does not exist. 
-- Added [releases](https://github.com/Benjas333/AutoSendNewFilesWebhook/releases) for people not so familiar with programming in general.
+- Added [releases](https://github.com/Benjas333/AutoSendNewFilesDiscord/releases) for people not so familiar with programming in general.
 
 ## Contributing
 Any contribution would be appreciated.
