@@ -84,9 +84,15 @@ client.run(token="YOUR TOKEN HERE")
 > If you want to use the `.env` file with the importing methods, you just need to make `import config`.
 
 ## TO DO
-- Find an optimized way to send big files quickly.
+- [x] Find an optimized way to send big files quickly. Solution: Litterbox
+- [ ] Add a GUI.
+- [ ] Add system tray support.
 
 ## Changelog
+- Added litterbox implementation
+- Added updater for the executable releases.
+- Added lazy try of rate limit support for Selfbot mode.
+- Rebranded repo to **AutoSendNewFilesDiscord**
 - Added rate limit support for the Webhook mode.
 - Added loop() method to Selfbot class and token as an init class argument.
 - Added multiple extensions implementation for importing methods.
