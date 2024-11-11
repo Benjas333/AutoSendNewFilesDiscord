@@ -1,8 +1,8 @@
 import src.files_handler as files_handler
+from src.files_manipulator import uploadFileToLitterbox
 from pathlib import Path
 from time import sleep
 from typing import Optional
-# from clips_manipulator import create_clip
 from discord.ext import tasks
 import discord
 
@@ -11,12 +11,14 @@ _seconds = 1.0
 class SelfBot(discord.Client):
         def __init__(
                 self,
-                channel_id: int | list[int],
-                token: Optional[str],
                 directory: str,
+                channel_id: int | list[int],
+                token: Optional[str] = None,
                 extension: str | list[str] = "*",
                 recursive: bool = False,
                 seconds: float = _seconds,
+                litterboxMBThreshold: float = 10.0,
+                litterboxExtensions: list[str] = [],
                 *args,
                 **kwargs
         ):
@@ -30,6 +32,8 @@ class SelfBot(discord.Client):
                 _seconds = self.seconds
                 self.channels = []
                 self.token = token
+                self.litterboxThreshold = litterboxMBThreshold * 1024 * 1024
+                self.litterboxExtensions = set(litterboxExtension.lower().removeprefix('.') for litterboxExtension in litterboxExtensions)
         
 
         async def sendMessage(
@@ -46,9 +50,12 @@ class SelfBot(discord.Client):
                                 raise Exception("The path provided is not a file: " + file)
                         
                         print(f"Sending file: {file.name}")
-                        with file.open('rb') as content:
-                                await channel.send(message, file=discord.File(content, file.name))
-                        sleep(1)
+                        if file.stat().st_size >= self.litterboxMBThreshold or (self.litterboxExtensions and file.suffix.lower().removeprefix('.') in self.litterboxExtensions):
+                                await channel.send(message + "\n" + uploadFileToLitterbox(file))
+                        else:
+                                with file.open('rb') as content:
+                                        await channel.send(message, file=discord.File(content, file.name))
+                        sleep(0.5)
                 print(message)
 
 
@@ -82,16 +89,10 @@ class SelfBot(discord.Client):
                                 print(f"Waiting for file to stop being used... {file}")
                                 file_size = fileObj.stat().st_size
                                 sleep(0.5)
-                        # sleep(4)
-                        # res = create_clip(clipObj, 20)
-                        # if res.returncode != 0:
-                        #         message = "Failed to create clip: " + str(res.stderr)
-                        #         print(message)
-                        #         await channel.send(message)
-                        # file = Path(f"clips/{clipObj.name}")
 
                         await self.sendMessage(f"New file: `{fileObj.name}`", fileObj)
                         files_handler.updateFile([file], doAppend=True)
+                        sleep(0.5)
         
 
         @sendNewFiles.before_loop
@@ -99,7 +100,7 @@ class SelfBot(discord.Client):
                 await self.wait_until_ready()
         
 
-        def loop(self):
+        def mainloop(self):
                 if not self.token:
                         print("No token provided at the object initialization. Use run('TOKEN') instead.")
                         return
