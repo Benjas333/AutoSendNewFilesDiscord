@@ -1,19 +1,21 @@
 import src.files_handler as files_handler
-from typing import Optional
+from src.files_manipulator import uploadFileToLitterbox
 from pathlib import Path
+from typing import Optional
 from time import sleep
-# from clips_manipulator import create_clip
 from discord_webhook import DiscordWebhook
 
 class Webhook():
         def __init__(
                 self,
-                url: str | list[str],
-                user: Optional[str],
                 directory: str,
+                url: str | list[str],
+                user: Optional[str] = None,
                 extension: str | list[str] = "*",
                 recursive: bool = False,
                 seconds: float = 1.0,
+                litterboxMBThreshold: float = 25.0,
+                litterboxExtensions: list[str] = [],
                 **kwargs
         ) -> None:
                 super().__init__()
@@ -23,7 +25,9 @@ class Webhook():
                 self.recursive = recursive
                 self.seconds = seconds
                 self.webhooks = [DiscordWebhook(webhook_url, rate_limit_retry=True, username="New Files AutoSender", **kwargs) for webhook_url in self.webhook_urls]
-                self.user = user
+                self.userPrefix = f"({user}) " if user else ''
+                self.litterboxThreshold = litterboxMBThreshold * 1024 * 1024
+                self.litterboxExtensions = set(litterboxExtension.lower().removeprefix(".") for litterboxExtension in litterboxExtensions)
         
 
         def sendMessage(
@@ -31,8 +35,7 @@ class Webhook():
                 message: str,
                 file: Optional[Path] = None
         ):
-                userPrefix = f"({self.user}) " if self.user else ''
-                message = f"{userPrefix}{message}"
+                message = f"{self.userPrefix}{message}"
                 for webhook in self.webhooks:
                         webhook.content = message
                         if not file:
@@ -41,15 +44,12 @@ class Webhook():
                         
                         if not file.is_file():
                                 raise Exception("The path provided is not a file: " + file)
-                        
-                        # sleep(5)
-                        # res = create_clip(file, 30)
-                        # if res.returncode != 0:
-                        #         raise Exception("Failed to create clip: " + str(res.stderr))
-                        # file = Path(f"clips/{file.name}")
 
                         print(f"Sending file: {file.name}")
-                        webhook.add_file(file.read_bytes(), file.name)
+                        if file.stat().st_size >= self.litterboxThreshold or (self.litterboxExtensions and file.suffix.lower().removeprefix('.') in self.litterboxExtensions):
+                                webhook.content += "\n" + uploadFileToLitterbox(file)
+                        else:
+                                webhook.add_file(file.read_bytes(), file.name)
                         webhook.execute()
                         webhook.remove_files()
                 print(message)
@@ -73,11 +73,11 @@ class Webhook():
                                 print(f"Waiting for file to stop being used... {file}")
                                 file_size = fileObj.stat().st_size
                                 sleep(0.5)
-                        self.sendMessage(f"New file: {fileObj.name}", fileObj)
+                        self.sendMessage(f"New file: `{fileObj.name}`", fileObj)
                         files_handler.updateFile([file], doAppend=True)
         
 
-        def loop(self):
+        def mainloop(self):
                 self.sendMessage("Successfully started webhook")
                 while True:
                         sleep(self.seconds)
@@ -90,6 +90,7 @@ if __name__ == "__main__":
                 url=[config.WEBHOOK_URL],
                 directory=config.FILES_DIRECTORY,
                 extension=[config.FILES_EXTENSION, "m4a"],
-                recursive=config.RECURSIVE_DIRECTORIES
+                recursive=config.RECURSIVE_DIRECTORIES,
+                litterboxExtensions=["mp4"]
         )
-        webhook.loop()
+        webhook.mainloop()
