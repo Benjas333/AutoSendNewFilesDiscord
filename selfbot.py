@@ -50,7 +50,7 @@ class SelfBot(discord.Client):
                                 raise Exception("The path provided is not a file: " + file)
                         
                         print(f"Sending file: {file.name}")
-                        if file.stat().st_size >= self.litterboxMBThreshold or (self.litterboxExtensions and file.suffix.lower().removeprefix('.') in self.litterboxExtensions):
+                        if file.stat().st_size >= self.litterboxThreshold or (self.litterboxExtensions and file.suffix.lower().removeprefix('.') in self.litterboxExtensions):
                                 await channel.send(message + "\n" + uploadFileToLitterbox(file))
                         else:
                                 with file.open('rb') as content:
