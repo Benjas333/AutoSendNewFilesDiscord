@@ -1,0 +1,48 @@
+
+line-length = 125
+indent-width = 8
+
+[lint]
+select = [
+  "E",
+  "F",
+  "UP",
+  "B",
+  "SIM",
+  "I",
+  "ANN",
+  "ASYNC",
+  "BLE",
+  "FBT",
+  "A",
+  "C4",
+  "FA",
+  # "CPY",
+  "ISC",
+  "ICN",
+  "G",
+  "INP",
+  "RET",
+  "SLF",
+  "TID252",
+  "TC",
+  "C90",
+  "N",
+  "PERF",
+  "W",
+  "RUF",
+]
+ignore = ["E117", "SIM105", "RUF001", "RUF002", "RUF003"]
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+preview = true
+
+[lint.per-file-ignores]
+"scripts/**.py" = ["INP001"]
+"**/tests/**.py" = ["ANN201"]
+
+[pep8-naming]
+extend-ignore-names = ["*Exception"]
+
+[format]
+indent-style = "space"
+line-ending = "auto"

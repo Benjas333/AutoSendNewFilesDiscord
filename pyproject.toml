@@ -1,0 +1,26 @@
+[project]
+name = "AutoSendNewFilesDiscord"
+authors = [{ name = "Benjas333" }]
+version = "2.4.0"
+description = "Script that automatically sends new files from a directory to Discord"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "aiohttp>=3.13.5",
+    "discord-py-self>=2.0.0",
+    "discord-webhook>=1.3.1",
+    "orjson>=3.11.8",
+    "python-dotenv>=1.0.1",
+    "requests>=2.32.3",
+    "trio>=0.33.0",
+]
+
+[dependency-groups]
+dev = [
+    "colorama>=0.4.6",
+    "inputwhile>=1.0.2",
+    "pycryptodome>=3.23.0",
+    "pyinstaller>=6.19.0",
+    "pywin32>=311",
+    "setuptools>=82.0.1",
+]

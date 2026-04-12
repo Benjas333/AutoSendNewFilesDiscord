@@ -1,118 +1,146 @@
-import src.files_handler as files_handler
-from src.files_manipulator import uploadFileToLitterbox
-from pathlib import Path
-from time import sleep
-from typing import Optional
-from discord.ext import tasks
-import discord
+from __future__ import annotations
 
-_seconds = 1.0
+import asyncio
+from typing import TYPE_CHECKING, override
+
+import discord
+import trio
+from discord.ext import tasks
+
+import src.files_handler as files_handler
+from src.files_manipulator import async_upload_file_to_litterbox
+
+if TYPE_CHECKING:
+        from discord.channel import DMChannel, GroupChannel
+        from discord.threads import Thread
+
+_seconds: float = 1.0
+
 
 class SelfBot(discord.Client):
         def __init__(
                 self,
                 directory: str,
                 channel_id: int | list[int],
-                token: Optional[str] = None,
+                token: str | None = None,
                 extension: str | list[str] = "*",
+                *,
                 recursive: bool = False,
                 seconds: float = _seconds,
-                litterboxMBThreshold: float = 10.0,
-                litterboxExtensions: list[str] = [],
-                *args,
-                **kwargs
-        ):
-                super().__init__(*args, **kwargs)
-                self.channel_ids = set(channel_id if isinstance(channel_id, list) else [channel_id])
-                self.directory = directory
-                self.extension = extension
-                self.recursive = recursive
-                self.seconds = seconds
+                litterbox_mb_threshold: float = 10.0,
+                litterbox_extensions: list[str] | None = None,
+                **kwargs,  # pyright: ignore[reportUnknownParameterType, reportMissingParameterType]  # noqa: ANN003
+        ) -> None:
+                super().__init__(**kwargs)  # pyright: ignore[reportUnknownArgumentType]
+                self.channel_ids: set[int] = set(channel_id if isinstance(channel_id, list) else [channel_id])
+                self.directory: str = directory
+                self.extension: str | list[str] = extension
+                self.recursive: bool = recursive
+                self.seconds: float = seconds
                 global _seconds
                 _seconds = self.seconds
-                self.channels = []
-                self.token = token
-                self.litterboxThreshold = litterboxMBThreshold * 1024 * 1024
-                self.litterboxExtensions = set(litterboxExtension.lower().removeprefix('.') for litterboxExtension in litterboxExtensions)
-        
+                self.channels: list[
+                        DMChannel | GroupChannel | Thread | discord.VoiceChannel | discord.TextChannel | discord.StageChannel
+                ] = []
+                self.token: str | None = token
+                self.litterboxThreshold: float = litterbox_mb_threshold * 1024 * 1024
+                self.litterboxExtensions: set[str] = {
+                        litterboxExtension.lower().removeprefix(".") for litterboxExtension in litterbox_extensions or []
+                }
 
-        async def sendMessage(
+        async def send_message(
                 self,
                 message: str,
-                file: Optional[Path] = None,
-        ):
+                file: trio.Path | None = None,
+        ) -> None:
                 for channel in self.channels:
+                        await asyncio.sleep(0.5)
                         if not file:
-                                await channel.send(message)
+                                _ = await channel.send(message)
                                 continue
-                        
+
                         if not file.is_file():
-                                raise Exception("The path provided is not a file: " + file)
-                        
+                                raise Exception(f"The path provided is not a file: {file}")
+
+                        file_stats = await file.stat()
+                        if file_stats.st_size >= 1024**3:
+                                print(f"{file.name} size is bigger than 1 GB! Skipped")
+                                continue
+
                         print(f"Sending file: {file.name}")
-                        if file.stat().st_size >= self.litterboxThreshold or (self.litterboxExtensions and file.suffix.lower().removeprefix('.') in self.litterboxExtensions):
-                                await channel.send(message + "\n" + uploadFileToLitterbox(file))
+                        if file_stats.st_size >= self.litterboxThreshold or (
+                                self.litterboxExtensions
+                                and file.suffix.lower().removeprefix(".") in self.litterboxExtensions
+                        ):
+                                _ = await channel.send(message + "\n" + await async_upload_file_to_litterbox(file))
                         else:
-                                with file.open('rb') as content:
-                                        await channel.send(message, file=discord.File(content, file.name))
-                        sleep(0.5)
+                                _ = await channel.send(message, file=discord.File(file, file.name))
                 print(message)
 
-
+        @override
         async def setup_hook(self) -> None:
-                self.sendNewFiles.start()
-        
+                _ = self.send_new_files.start()
 
-        async def on_ready(self):
+        async def on_ready(self) -> None:
                 print(f"\033[92m===== Logged in as {self.user} =====\033[0m")
                 for channel_id in self.channel_ids:
+                        await asyncio.sleep(1)
                         channel = self.get_channel(channel_id)
-                        if not channel:
+                        if isinstance(
+                                channel,
+                                (
+                                        type(None),
+                                        discord.CategoryChannel,
+                                        discord.ForumChannel,
+                                        discord.DirectoryChannel,
+                                ),
+                        ):
                                 continue
+
                         self.channels.append(channel)
-                        await channel.send("Successfully started sending new files")
-                        sleep(1)
+                        _ = await channel.send("Successfully started sending new files")
                 if len(self.channels) == 0:
                         raise Exception("No channels were started")
-        
 
         @tasks.loop(seconds=_seconds)
-        async def sendNewFiles(self):
-                new_files = files_handler.globNewFiles(self.directory, self.extension, self.recursive)
-                if not new_files: return
-                await self.sendMessage("**New file(s) detected**")
+        async def send_new_files(self) -> None:
+                new_files = files_handler.glob_new_files(self.directory, self.extension, recursive=self.recursive)
+                if not new_files:
+                        return
+
+                await self.send_message("**New file(s) detected**")
 
                 for file in new_files:
-                        fileObj = Path(file)
-                        file_size = -1
-                        while files_handler.isFileBeingUsed(fileObj, file_size):
+                        await asyncio.sleep(0.5)
+                        file_path = trio.Path(file)
+                        file_size: int = -1
+                        while await files_handler.async_is_file_being_used(file_path, file_size):
                                 print(f"Waiting for file to stop being used... {file}")
-                                file_size = fileObj.stat().st_size
-                                sleep(0.5)
+                                file_size = (await file_path.stat()).st_size
+                                await asyncio.sleep(0.5)
 
-                        await self.sendMessage(f"New file: `{fileObj.name}`", fileObj)
-                        files_handler.updateFile([file], doAppend=True)
-                        sleep(0.5)
-        
+                        await self.send_message(f"New file: `{file_path.name}`", file_path)
+                        files_handler.update_file([file], should_append=True)
 
-        @sendNewFiles.before_loop
-        async def before_sendNewFiles(self):
+        @send_new_files.before_loop
+        async def before_send_new_files(self) -> None:
                 await self.wait_until_ready()
-        
 
-        def mainloop(self):
+        def mainloop(self) -> None:
                 if not self.token:
                         print("No token provided at the object initialization. Use run('TOKEN') instead.")
                         return
+
                 self.run(self.token)
 
 
 if __name__ == "__main__":
         import src.config as config
+
         client = SelfBot(
                 channel_id=[config.CHANNEL_ID],
                 directory=config.FILES_DIRECTORY,
-                extension=[config.FILES_EXTENSION, 'm4a'],
+                extension=[config.FILES_EXTENSION, "m4a"],
                 recursive=config.RECURSIVE_DIRECTORIES,
         )
         client.run(config.TOKEN)

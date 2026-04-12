@@ -1,56 +1,74 @@
 # Auto Send New Files Discord
-Do you want to automatically send new files from a directory of your computer to a Discord Webhook? Well now you can with this code. Don't worry anymore about taking the time to search the file and sending it manually. This code will automatically do it for you.
+
+Do you want to automatically send new files from a directory of your computer to a Discord Webhook?
+Well now you can with this code. Don't worry anymore about taking the time to search the file and sending it manually.
+This code will automatically do it for you.
 
 ![](assets/discordExample.png)
+
 > [!NOTE]
 > Now Selfbot is available too.
 
 ## Official Releases
+
 ### You can download the latest official release [here](https://github.com/Benjas333/AutoSendNewFilesDiscord/releases/latest/).
 
 ![](assets/terminalExample.png)
+
 > [!CAUTION]
 > I don't know if it works properly in other operating systems than Windows.
 
 ## Cloning repo
+
 ### Getting Started
+
 [Python 3.12](https://www.python.org/downloads/) recommended.
 [Discord](https://discord.com/) lol.
 
 ### Clone this project
+
 ```
 git clone https://github.com/Benjas333/AutoSendNewFilesDiscord
 cd AutoSendNewFilesDiscord
 ```
 
 ### Install dependencies
+
 ```
 pip install -r requirements.txt
 ```
 
 ### Configure the .env file
+
 - Change the content of `example.env`.
 - Rename it to `.env`.
 
 ## Usage
+
 ### Command line method
+
 **`.env` file required.**
 
 #### Webhook
+
 ```
 python webhook.py
 ```
 
 #### Selfbot
+
 ```
 python selfbot.py
 ```
+
 To use the selfbot you must provide your account token in the `.env` file.
 
 `Ctrl + C` to stop the scripts.
 
 ### Import method
+
 #### Webhook
+
 ```python
 # Import script
 from webhook import Webhook
@@ -67,6 +85,7 @@ webhook.loop()
 ```
 
 #### Selfbot
+
 ```python
 # Import script
 from selfbot import Selfbot
@@ -80,15 +99,37 @@ client = Selfbot(
 )
 client.run(token="YOUR TOKEN HERE")
 ```
+
 > [!IMPORTANT]
 > If you want to use the `.env` file with the importing methods, you just need to make `import config`.
 
 ## TO DO
+
 - [x] Find an optimized way to send big files quickly. Solution: Litterbox
 - [ ] Add a GUI.
 - [ ] Add system tray support.
 
-## Changelog
+# Changelog
+
+## 2026-04-12
+
+### Added
+
+- Added Ruff formatting rules.
+- Added pyproject.toml.
+- Added 1 GB max size limit for Litterbox.
+
+### Changed
+
+- Migrated to uv package manager.
+
+### Fixed
+
+- General fixes.
+- I/O Operations inside async functions now are async instead of sync.
+
+## I don't remember
+
 - Added litterbox implementation
 - Added updater for the executable releases.
 - Added lazy try of rate limit support for Selfbot mode.
@@ -99,11 +140,13 @@ client.run(token="YOUR TOKEN HERE")
 - Added multiple Discord channels implementation for importing methods.
 - Added seconds argument (default: 1).
 - Added Webhook class in `webhook.py`.
-- Added create `old_clips.txt` functionality if the file does not exist. 
+- Added create `old_clips.txt` functionality if the file does not exist.
 - Added [releases](https://github.com/Benjas333/AutoSendNewFilesDiscord/releases) for people not so familiar with programming in general.
 
 ## Contributing
+
 Any contribution would be appreciated.
 
 ## Links
+
 [Twitter](https://twitter.com/ElBenjas333)
