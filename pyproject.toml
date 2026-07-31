@@ -22,5 +22,5 @@ dev = [
     "pycryptodome>=3.23.0",
     "pyinstaller>=6.19.0",
     "pywin32>=311",
-    "setuptools>=82.0.1",
+    "setuptools>=83.0.0",
 ]
